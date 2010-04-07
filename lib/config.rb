@@ -1,7 +1,6 @@
+require File.expand_path('../../init', __FILE__)
+Bundler.require
 require "yaml"
-
-require "rubygems"
-require "sinatra"
 
 module Nesta
   class Config

@@ -10,6 +10,10 @@ group :development do
   gem "shotgun"
 end
 
+group :deploy do
+  gem "vlad", "2.0.0"
+end
+
 group :test do
   gem "hpricot", "0.8.2"
   gem "rack-test", "0.5.3", :require => "rack/test"

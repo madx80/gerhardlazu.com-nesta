@@ -1,8 +1,6 @@
+require File.expand_path('../../init', __FILE__)
+Bundler.require
 require "time"
-
-require "rubygems"
-require "maruku"
-require "redcloth"
 
 class FileModel
   FORMATS = [:mdown, :haml, :textile]

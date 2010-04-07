@@ -1,6 +1,7 @@
-require "rubygems"
-require "sinatra"
+require File.expand_path('../init', __FILE__)
+Bundler.require(:default, :deploy)
 require "spec/rake/spectask"
+
 begin
   require "vlad"
   Vlad.load(:scm => :git, :app => nil, :web => nil)
