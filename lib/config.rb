@@ -72,6 +72,11 @@ module Nesta
         self.yaml ||= YAML::load(IO.read(file))
       end
       
+      def self.themes
+        file = File.join(File.dirname(__FILE__), *%w[.. config themes.yml])
+        self.yaml ||= YAML::load(IO.read(file))
+      end
+      
       def self.get(key, default = {})
         configuration[key].nil? ? default : configuration[key]
       end
