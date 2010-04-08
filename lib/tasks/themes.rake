@@ -1,12 +1,10 @@
-require "pp"
-
 namespace :themes do
   desc "List all available themes"
   task :list do
     output = []
     Nesta::Config.themes.sort.each do |name, url|
-      output << "* #{name}"
-    end
+      output << "* #{name} #{installed?(name)}"
+    end    
     puts output.join("\n")
   end
   
@@ -18,14 +16,28 @@ namespace :themes do
       Rake::Task["themes:list"].execute
       puts "eg: rake themes:install THEME=postal3"
     else
-      FileUtils.mkdir_p("#{ENV['APP_ROOT']}/themes") unless File.exists?("#{ENV['APP_ROOT']}/themes")
-      if File.exists?("#{ENV['APP_ROOT']}/themes/#{theme}")
+      FileUtils.mkdir_p(ENV['THEMES_DIR']) unless File.directory?(ENV['THEMES_DIR'])
+      if File.directory?("#{ENV['THEMES_DIR']}/#{theme}")
         puts "Theme #{theme} is already installed"
       else
-        `git clone --depth=1 #{Nesta::Config.themes[theme]} #{ENV['APP_ROOT']}/themes/#{theme}`
-        `rm -fR #{ENV['APP_ROOT']}/themes/#{theme}/.git`
+        system "git clone --depth=1 --quiet #{Nesta::Config.themes[theme]} #{ENV['THEMES_DIR']}/#{theme}"
+        FileUtils.rm_r "#{ENV['THEMES_DIR']}/#{theme}/.git", :force => true
+        ignore_themes_folder
         puts "Theme #{theme} successfully installed"
       end
+    end
+  end
+end
+
+def installed?(theme)
+  "[Installed]" if File.directory?("#{ENV['THEMES_DIR']}/#{theme}")
+end
+
+def ignore_themes_folder
+  ignore = "#{ENV['APP_ROOT']}/.git/info/exclude"
+  unless File.read(ignore).include?("themes")
+    File.open(ignore, "a") do |file|
+      file.puts "themes" 
     end
   end
 end
