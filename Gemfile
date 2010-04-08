@@ -10,7 +10,7 @@ group :development do
   gem "shotgun"
 end
 
-group :deploy do
+group :rake do
   gem "vlad", "2.0.0"
 end
 

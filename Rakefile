@@ -1,5 +1,5 @@
 require File.expand_path('../init', __FILE__)
-Bundler.require(:default, :deploy)
+Bundler.require(:default, :rake)
 require "spec/rake/spectask"
 
 begin
