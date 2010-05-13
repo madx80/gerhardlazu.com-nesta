@@ -11,7 +11,7 @@ group :development do
 end
 
 group :rake do
-  gem "vlad", "2.0.0"
+  gem "git-deploy", "0.4.0"
 end
 
 group :test do

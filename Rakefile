@@ -2,12 +2,6 @@ require File.expand_path('../init', __FILE__)
 Bundler.require(:default, :rake)
 require "spec/rake/spectask"
 
-begin
-  require "vlad"
-  Vlad.load(:scm => :git, :app => nil, :web => nil)
-rescue LoadError
-end
-
 require File.join(File.dirname(__FILE__), *%w[spec model_factory])
 require File.join(File.dirname(__FILE__), *%w[lib models])
 require File.join(File.dirname(__FILE__), *%w[lib config])
