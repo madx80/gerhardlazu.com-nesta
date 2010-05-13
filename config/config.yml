@@ -50,6 +50,6 @@ development:
   content: content
 
 production:
-  cache: true
-  content: /home/gerhard/new.gerhardlazu.com
+  cache: false
+  content: content
   google_analytics_code: "UA-106574-1"
