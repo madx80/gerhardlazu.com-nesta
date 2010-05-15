@@ -46,10 +46,9 @@ disqus_short_name: gerhardlazu
 # traffic on your site. Probably best not to set it in development mode.
 #
 development:
-  cache: false
   content: content
 
 production:
-  cache: false
+  cache: "public, max-age=3600"
   content: content
   google_analytics_code: "UA-106574-1"

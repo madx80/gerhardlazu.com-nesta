@@ -11,11 +11,7 @@ module Nesta
     end
 
     def self.cache
-      if Sinatra::Application.environment == :test
-        false
-      else
-        get(environment)["cache"] || false
-      end
+      get(environment)["cache"] || false
     end
 
     def self.title
