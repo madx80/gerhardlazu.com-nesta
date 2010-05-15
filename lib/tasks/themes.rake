@@ -22,7 +22,6 @@ namespace :themes do
       else
         system "git clone --depth=1 --quiet #{Nesta::Config.themes[theme]} #{ENV['THEMES_DIR']}/#{theme}"
         FileUtils.rm_r "#{ENV['THEMES_DIR']}/#{theme}/.git", :force => true
-        ignore_themes_folder
         puts "Theme #{theme} successfully installed"
       end
     end
@@ -31,13 +30,4 @@ end
 
 def installed?(theme)
   "[Installed]" if File.directory?("#{ENV['THEMES_DIR']}/#{theme}")
-end
-
-def ignore_themes_folder
-  ignore = "#{ENV['APP_ROOT']}/.git/info/exclude"
-  unless File.read(ignore).include?("themes")
-    File.open(ignore, "a") do |file|
-      file.puts "themes" 
-    end
-  end
 end
