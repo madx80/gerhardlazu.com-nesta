@@ -9,11 +9,7 @@ module Nesta
     @@yaml = nil
 
     def self.cache
-      if Sinatra::Application.environment == :test
-        false
-      else
-        get(environment)["cache"] || false
-      end
+      get(environment)["cache"] || false
     end
 
     def self.title

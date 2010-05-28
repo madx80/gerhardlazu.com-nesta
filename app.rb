@@ -4,8 +4,10 @@ require "builder"
 require "haml"
 require "sass"
 
-require "lib/cache"
 require "lib/configuration"
+require 'sass'
+require 'haml'
+
 require "lib/models"
 
 set :cache_enabled, Nesta::Configuration.cache
@@ -77,6 +79,14 @@ helpers do
   def sass(template, options = {}, locals = {})
     super(template, options.merge(render_options(:sass, template)), locals)
   end
+  
+  def cache(name)
+    @cache = Nesta::Config.cache
+    if @cache
+      response['Cache-Control'] = @cache
+      etag name
+    end
+  end
 end
 
 not_found do
@@ -120,47 +130,52 @@ def render_options(engine, template)
 end
 
 get "/css/:sheet.css" do
+  cache(params[:sheet])
   content_type "text/css", :charset => "utf-8"
-  cache sass(params[:sheet].to_sym)
+  sass(params[:sheet].to_sym)
 end
 
 get "/" do
+  cache(:index)
   set_common_variables
   set_from_config(:title, :subtitle, :description, :keywords)
   @heading = @title
   @title = "#{@title} - #{@subtitle}"
   @articles = Page.find_articles[0..7]
   @body_class = "home"
-  cache haml(:index)
+  haml(:index)
 end
 
 get %r{/attachments/([\w/.-]+)} do
   file = File.join(
-      Nesta::Configuration.attachment_path, params[:captures].first)
+    Nesta::Config.attachment_path, params[:captures].first)
   send_file(file, :disposition => nil)
 end
 
 get "/articles.xml" do
+  cache('articles.xml')
   content_type :xml, :charset => "utf-8"
   set_from_config(:title, :subtitle, :author)
   @articles = Page.find_articles.select { |a| a.date }[0..9]
-  cache builder(:atom)
+  builder(:atom)
 end
 
 get "/sitemap.xml" do
+  cache('sitemap.xml')
   content_type :xml, :charset => "utf-8"
   @pages = Page.find_all
   @last = @pages.map { |page| page.last_modified }.inject do |latest, page|
     (page > latest) ? page : latest
   end
-  cache builder(:sitemap)
+  builder(:sitemap)
 end
 
 get "*" do
+  cache(params[:splat])
   set_common_variables
   @page = Page.find_by_path(File.join(params[:splat]))
   raise Sinatra::NotFound if @page.nil?
   set_title(@page)
   set_from_page(:description, :keywords)
-  cache haml(:page)
+  haml(:page)
 end

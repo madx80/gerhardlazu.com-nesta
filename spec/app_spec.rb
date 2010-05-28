@@ -303,6 +303,24 @@ describe "page" do
       body.should have_tag('script[@src*="mysite/embed.js"]')
     end
   end
+  
+  describe "cached pages" do
+    before(:each) do
+      @cache = "public, max-age=3600"
+      stub_env_config_key('cache', @cache)
+      stub_configuration
+      @article = create_article(
+          :heading => "Cached page",
+          :content => "Original content",
+          :path => "cached-page")
+    end
+    
+    it "should be cached on first request" do
+      get '/cached-page'
+      last_response.headers['Cache-Control'].should == @cache
+      last_response.headers['ETag'].should include(@article.path)
+    end
+  end
 end
 
 describe "attachments" do
